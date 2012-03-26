@@ -25,7 +25,6 @@
                 left: 0px;
                 z-index:1;
             }
-            
             #census, #message, #stats {
                 position: absolute;
                 font-size: 40px;
@@ -35,16 +34,13 @@
                 z-index: 1;
                 color: #fff;
             }
-            #census:before  {
-                content: "#";
-                font-size: 14px;
-            }
+            
             #message    {
-                left: 300px;
+                left: 250px;
             }
             
             #stats {
-                left: 460px;
+                left: 430px;
             }
             
             body {
@@ -59,9 +55,12 @@
         <div id="census"></div>
         <div id="message"></div>
         <div id="stats"></div>
-        <script src="CellList.js"></script>
         <script src="kcolors.js"></script>
-        <script src="addEventListeners.js"></script>
-        <script src="popullution.js"></script>
+        <script>
+            for(x=1; x<=10; x++)    {
+                color = rainbow(x,10);
+                console.log(x, color.r, color.g, color.b);
+            }
+        </script>
     </body>
 </html>

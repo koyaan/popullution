@@ -10,7 +10,7 @@ var mouseDown = false;
 var colorWrap = 5;
 
 var particleCount= 100;
-var particleStartAreaSize = 30;
+var particleStartAreaSize = 20;
 var stepsize = 0.1;
 var particleMeta = new Array(1);
 var colors = new Array();
@@ -19,11 +19,14 @@ var pMaterial;
 var lifespan = 200;
 var Pool;
 
-var POPULLUTION = {};
+var POPULLUTION = {
+    maxGen: 0
+};
+
 POPULLUTION.pleb = function() {
-    this.energy =15000;//Number.POSITIVE_INFINITY;
+    this.energy = KUTIL.rnd(500, 100);//Number.POSITIVE_INFINITY;
     this.spawns = 3;
-    this.generation = 1;
+    this.generation = 0;
     this.particle = undefined;
 }
 
@@ -150,7 +153,7 @@ Pool = {
                 return this.__pools.pop();
             }
 
-            //console.log("pool ran out!")
+            console.log("pool ran out!")
             return null;
 
         },
@@ -178,14 +181,13 @@ Pool = {
         particle = particles.vertices[particleIndex];
         particle.position.set(pX, pY, pZ);
 //        particle.position.set(p, p, p);
-        pRed = 1;
-        pGreen = 1;
+        pRed = 0;
+        pGreen = 0;
         pYellow = 1;
         colors[ particleIndex ].setRGB(pRed, pGreen, pYellow);
         pleb = new POPULLUTION.pleb();
         pleb.particle = particleIndex;
         POPULLUTION.plebs.push(pleb);
-//        console.log(pX,pY,pZ);
     }
     
     particles.colors = colors;
@@ -212,7 +214,6 @@ Pool = {
         cZ = position.z > 0 ? Math.floor(position.z) : Math.ceil(position.z);
         
         cellcube.add(cX,cY,cZ,POPULLUTION.plebs[p]);
-//        cellcube.add(cX,cY,cZ,POPULLUTION.plebs[p])
     }
     
     scene.add(particleSystem);
@@ -269,7 +270,6 @@ function animate() {
             cX = particle.position.x > 0 ? Math.floor(particle.position.x) : Math.ceil(particle.position.x);
             cY = particle.position.y > 0 ? Math.floor(particle.position.y) : Math.ceil(particle.position.y);
             cZ = particle.position.z > 0 ? Math.floor(particle.position.z) : Math.ceil(particle.position.z);
-//            cellcube.remove(cX,cY,cZ,pCount);
             cellcube.remove(cX,cY,cZ, POPULLUTION.plebs[pCount]);
             
             if(--POPULLUTION.plebs[pCount].energy <= 0)   {
@@ -277,84 +277,44 @@ function animate() {
                 colors[plebsParticleIndex].setRGB(0,0,0);
                 Pool.add(plebsParticleIndex);
                 POPULLUTION.plebs.splice(pCount,1);
-                //console.log(pCount,"died");
             } else {
-               // random step of size stepsize
-                var choice = Math.floor(Math.random()*6);
+                // color
+                color = KCOLORS.RtoB(POPULLUTION.plebs[pCount].generation, POPULLUTION.maxGen);
+                colors[ plebsParticleIndex ].setRGB( color.r, color.g, color.b);
+ 
+                // random step of size stepsize
                 particle.position.addSelf(
-                    settings.movementMatrix[choice]); // TODO: multiply with gauss scalar
+                    settings.movementMatrix[Math.floor(Math.random()*6)]); // TODO: multiply with gauss scalar
 
                 normalizePosition(particle);
 
                 cX = particle.position.x > 0 ? Math.floor(particle.position.x) : Math.ceil(particle.position.x);
                 cY = particle.position.y > 0 ? Math.floor(particle.position.y) : Math.ceil(particle.position.y);
                 cZ = particle.position.z > 0 ? Math.floor(particle.position.z) : Math.ceil(particle.position.z);
-    //            console.log(cX,cY,cZ,pCount,"add");
-//                cellcube.add(cX,cY,cZ,pCount)
                 cellcube.add(cX,cY,cZ, POPULLUTION.plebs[pCount])
             }
         }
-        
-//        pCount = POPULLUTION.plebs.length;
-//        while(pCount--) {
-//            plebsParticleIndex = POPULLUTION.plebs[pCount].particle
-//            particle = particles.vertices[plebsParticleIndex];
-//            
-//            
-//            cX = particle.position.x > 0 ? Math.floor(particle.position.x) : Math.ceil(particle.position.x);
-//            cY = particle.position.y > 0 ? Math.floor(particle.position.y) : Math.ceil(particle.position.y);
-//            cZ = particle.position.z > 0 ? Math.floor(particle.position.z) : Math.ceil(particle.position.z);
-//
-////            console.log(cX,cY,cZ,pCount,"remove");
-//            cellcube.remove(cX,cY,cZ,pCount)
-//            
-//            // random step of size stepsize
-//            var choice = Math.floor(Math.random()*6);
-//            particle.position.addSelf(
-//                settings.movementMatrix[choice]); // TODO: multiply with gauss scalar
-//            
-//            normalizePosition(particle);
-//            
-//            cX = particle.position.x > 0 ? Math.floor(particle.position.x) : Math.ceil(particle.position.x);
-//            cY = particle.position.y > 0 ? Math.floor(particle.position.y) : Math.ceil(particle.position.y);
-//            cZ = particle.position.z > 0 ? Math.floor(particle.position.z) : Math.ceil(particle.position.z);
-////            console.log(cX,cY,cZ,pCount,"add");
-//            cellcube.add(cX,cY,cZ,pCount)
-//            
-//        }
+
 
     for(cellIndex in cellcube.activeCells)  {
         for(plebIndex in cellcube.activeCells[cellIndex].members)  {
             plebOne = cellcube.activeCells[cellIndex].members[plebIndex];
-            //pCount = cellcube.activeCells[cellIndex].members[plebIndex];
             if(exhausted[POPULLUTION.plebs.indexOf(plebOne)])
                 continue;
-//            particle = particles.vertices[POPULLUTION.plebs[pCount].particle];
             particle = particles.vertices[plebOne.particle];
             for( neighborIndex in cellcube.activeCells[cellIndex].neighbors)    {
                 if(cellcube.activeCells[cellIndex].neighbors[neighborIndex].active) {
                     for(neighborPlebIndex in cellcube.activeCells[cellIndex].neighbors[neighborIndex].members)  {
-                        //console.log(cellcube.activeCells[cellIndex].neighbors[neighborIndex].members,neighborPlebIndex);
-//                        pcCount = cellcube.activeCells[cellIndex].neighbors[neighborIndex].members[neighborPlebIndex];
                         plebTwo = cellcube.activeCells[cellIndex].neighbors[neighborIndex].members[neighborPlebIndex];
-//                        console.log(pcCount);
-//                        if(neighborPlebIndex == plebIndex || exhausted[pcCount])
                         if(neighborPlebIndex == plebIndex || exhausted[POPULLUTION.plebs.indexOf(plebTwo)])
                             continue;
-//                        CanditatePleb = POPULLUTION.plebs[pcCount];
-//                        candiatePlebParticleIndex = POPULLUTION.plebs[pcCount].particle;
                         candiatePlebParticleIndex = plebTwo.particle;
                         collisionCandidate = particles.vertices[candiatePlebParticleIndex];
                         var distance = particle.position.distanceTo(collisionCandidate.position);
                         if(distance <1)  {
-//                                if(POPULLUTION.plebs[pCount].spawns > 0 && POPULLUTION.plebs[pcCount].spawns > 0)   {
                                 if(plebOne.spawns > 0 && plebTwo.spawns > 0)   {
-//                                    POPULLUTION.plebs[pCount].spawns--;
-//                                    POPULLUTION.plebs[pcCount].spawns--;
                                     plebOne.spawns--;
                                     plebTwo.spawns--;
-//                                    exhausted[pCount] = true;
-//                                    exhausted[pcCount] = true;  
                                     exhausted[POPULLUTION.plebs.indexOf(plebOne)] = true;
                                     exhausted[POPULLUTION.plebs.indexOf(plebOne)] = true;  
                                     particleIndex = Pool.get();
@@ -366,13 +326,9 @@ function animate() {
                                     normalizePosition(childParticle);
                                     pleb = new POPULLUTION.pleb();
                                     pleb.particle = particleIndex;
-//                                    pleb.generation = POPULLUTION.plebs[pCount].generation+1;
-                                    pleb.generation = plebOne.generation+1;
-                                    p=pleb.generation;
-                                    pRed = (p%colorWrap+1)/colorWrap;
-                                    pGreen = (colorWrap-(p%colorWrap))/colorWrap;
-                                    pYellow = (p%30)/30;
-                                    colors[ particleIndex ].setRGB( pRed, pGreen, pYellow);
+                                    pleb.generation = plebOne.generation+1,(pleb.generation > POPULLUTION.maxGen)&&(POPULLUTION.maxGen = pleb.generation);
+                                    color = KCOLORS.RtoB(pleb.generation, POPULLUTION.maxGen);
+                                    colors[ particleIndex ].setRGB( color.r, color.g, color.b);
                                     POPULLUTION.plebs.push(pleb);
                                 }
                         }
@@ -387,13 +343,6 @@ function animate() {
         particleSystem.geometry. __dirtyVertices = true;
         particleSystem.geometry. __dirtyColors = true;
         $('#census').text(POPULLUTION.plebs.length);
-        
-//        particleSystem.geometry.computeFiniteBoundingSphere();
-//        if(cellcube.size < particleSystem.geometry.finiteBoundingSphere.radius) {
-//            settings.run = false;
-//            $('#message').text("outbreak!");
-//        }
-//        $('#stats').text(Math.ceil(particleSystem.geometry.finiteBoundingSphere.radius));
     }
 
     requestAnimationFrame( animate );
