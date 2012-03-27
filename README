@@ -1,1 +1,8 @@
 the latest iteration of multiplying particles now in 3D!
+
+next up :
+[] optimize
+ - pool plebs
+ - save cellcube indices in plebs
+ - remove spawns: 0 plebs from cellcube
+[] reset switch
