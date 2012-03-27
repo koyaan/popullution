@@ -6,5 +6,6 @@ next up :
  - save cellcube indices in plebs
  - remove spawns: 0 plebs from cellcube
  - avoid double cell - double checks
- - get rid of indexOf (cellRemove) - DHT? 
+ - get rid of indexOf (cellRemove) - DHT?
+ - get rid of intermediary variables
 [] reset switch
