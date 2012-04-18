@@ -54,12 +54,23 @@ function addEventListeners() {
           
         onKeyDown: function(event)    {
 //            console.log(event.keyCode);
-            if(event.keyCode == 82)   { /* r */
-                settings.run = settings.run ? false : true;
-                  
-                for (var i in gui.__controllers) {
-                    gui.__controllers[i].updateDisplay();
-                }
+            switch(event.keyCode)   {
+                case(82): //r
+                    settings.run = settings.run ? false : true;
+                    break;
+                case(77): //m
+                    settings.move = settings.move ? false : true;
+                    break;
+                case(67): //c   
+                    settings.collide = settings.collide ? false : true;
+                    break;
+                case(65): //a
+                    settings.animate = settings.animate ? false : true;
+                    break;
+            }
+            
+            for (var i in gui.__controllers) {
+                gui.__controllers[i].updateDisplay();
             }
         }
            

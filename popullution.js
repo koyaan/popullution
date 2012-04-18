@@ -2,27 +2,25 @@
 var WIDTH = $('#container').width(),//1100,
 HEIGHT = $('#container').height();//600;    
 
-var initialCameraPosition = 200;
-
 var scene, camera, renderer, particleSystem, particles;
 var container;
 var mouseDown = false;
 
-var particleCount= 100;
-var particleStartAreaSize = 20;
-var particleMeta = new Array(1);
+var particleCount= 2500;
+var particleStartAreaSize = 50;
+var lifespan = 2000;
+
 var colors = new Array();
 
 var pMaterial;
-var lifespan = 200;
 var Pool;
 
 var POPULLUTION = {
-    maxGen: 5
+    maxGen: 1
 };
 
 POPULLUTION.pleb = function() {
-    this.energy = KUTIL.rnd(1000, 150);//Number.POSITIVE_INFINITY;
+    this.energy = Infinity;//KUTIL.rnd(lifespan, 150);//Number.POSITIVE_INFINITY;
     this.spawns = 3;
     this.generation = 1;
     this.particle = undefined;
@@ -51,48 +49,8 @@ function normalizePosition(particle)    {
 
 POPULLUTION.plebs = new Array();
 
-// used to store settings changeable through GUI
-var Settings = function() {
-    this.stepsize = 0.9;
-    this.movementMatrix = randomWalkMatrix(this.stepsize);
-    this.run = false;
-    this.cameraPosition = initialCameraPosition;
-    this.spawningAreaSize = 3.5;
-    this.maxPop = 10000;
-}
-
 init();
-
-// add GUI
-var settings = new Settings();
-var gui = new dat.GUI();
-var stepsizecontroller = gui.add(settings, 'stepsize', 0, 2);
-gui.add(settings, 'run');
-var cameracontroller = gui.add(settings, 'cameraPosition', 0, 1000);
-
-stepsizecontroller.onFinishChange(function(value) {
-    settings.movementMatrix = randomWalkMatrix(value);
-});
-
-cameracontroller.onFinishChange(function(value) {
-    camera.position.z = value;
-});
-
-gui.add(settings, 'spawningAreaSize', 1, 50);
-gui.add(settings, 'maxPop', 1000, 20000);
-
 animate();
-
-function randomWalkMatrix(stepsize) {
-    return Array(
-        new THREE.Vector3(stepsize  ,0          ,0),
-        new THREE.Vector3(-stepsize ,0          ,0),
-        new THREE.Vector3(0         ,stepsize   ,0),
-        new THREE.Vector3(0         ,-stepsize  ,0),
-        new THREE.Vector3(0         ,0          ,stepsize),
-        new THREE.Vector3(0         ,0          ,-stepsize)
-        );
-}
 
 var cellcube;
 
@@ -113,7 +71,7 @@ function init() {
 
     scene = new THREE.Scene();
 
-    camera.position.z = initialCameraPosition;
+    camera.position.z = settings.cameraPosition;
 
     scene.add(camera);
 
@@ -253,16 +211,23 @@ function animate() {
             $('#message').text("wipeout!");
         }
         
-        move();
+        if(settings.move)   {
+            move();
+        }
         
-        collide();
+        if(settings.collide)    {
+            collide();
+        }
         
         particleSystem.geometry. __dirtyVertices = true;
         particleSystem.geometry. __dirtyColors = true;
         $('#census').text(POPULLUTION.plebs.length);
     }
-
-    requestAnimationFrame( animate );
+    
+    if(settings.animate)    {
+        requestAnimationFrame( animate );
+    } 
+    
     render();
 
 }
@@ -315,8 +280,10 @@ function collide() {
 }
 
 function move() {
-    for(pCount in POPULLUTION.plebs) {
+    for(var pCount in POPULLUTION.plebs) {
         // get the particle
+        var plebs = POPULLUTION.plebs[pCount];
+        
         plebsParticleIndex = POPULLUTION.plebs[pCount].particle
         particle = particles.vertices[plebsParticleIndex];
 

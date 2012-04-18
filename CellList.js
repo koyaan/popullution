@@ -21,12 +21,12 @@ CELLLIST.Cell.prototype.get = function()  {
 }
 
 CELLLIST.Cell.prototype.remove = function(value)  {
-    idx = this.members.indexOf(value);
+    var idx = this.members.indexOf(value);
     if(idx != -1) {
         this.members.splice(idx, 1);
         if(this.members.length == 0)    {
             this.active = false;
-            cellIdx = this.celllist.activeCells.indexOf(this);
+            var cellIdx = this.celllist.activeCells.indexOf(this);
             if(cellIdx != -1) {
                 this.celllist.activeCells.splice(cellIdx,1);
             }
@@ -42,11 +42,11 @@ CELLLIST.Cube  = function(size,negativeIndices) {
     this.cells = new Array();
     this.activeCells = new Array;
     
-    for(x = 0; x<=this.size; x++) {
+    for(var x = 0; x<=this.size; x++) {
         this.cells[x] = new Array();
-        for(y = 0; y<=this.size; y++ ) {
+        for(var y = 0; y<=this.size; y++ ) {
             this.cells[x][y] = new Array();
-            for(z = 0;  z<=this.size; z++) {
+            for(var z = 0;  z<=this.size; z++) {
                 this.cells[x][y][z] = new CELLLIST.Cell(this);
             }
         }
@@ -55,34 +55,22 @@ CELLLIST.Cube  = function(size,negativeIndices) {
 
 
 CELLLIST.Cube.prototype.add = function (x,y,z,value) {
-    xx = x+this.normalizer;
-    yy = y+this.normalizer;
-    zz = z+this.normalizer;
-
-    this.cells[xx][yy][zz].push(value);
+    this.cells[x+this.normalizer][y+this.normalizer][z+this.normalizer].push(value);
 };
 
 
 CELLLIST.Cube.prototype.get = function (x,y,z) {
-    xx = x+this.normalizer;
-    yy  = y+this.normalizer;
-    zz = z+this.normalizer;
-    
-    return this.cells[xx][yy][zz].get();
+    return this.cells[x+this.normalizer][y+this.normalizer][z+this.normalizer].get();
 }
 
 CELLLIST.Cube.prototype.remove = function (x,y,z,value) {
-    xx = x+this.normalizer;
-    yy = y+this.normalizer;
-    zz = z+this.normalizer;
-//    console.log(xx,yy,zz);
-    this.cells[xx][yy][zz].remove(value);
+    this.cells[x+this.normalizer][y+this.normalizer][z+this.normalizer].remove(value);
 }
 
 CELLLIST.Cube.prototype.computeNeighbors = function()   {    
-    for(x = 0; x<=this.size; x++) {
-        for(y = 0; y<=this.size; y++ ) {
-            for(z = 0;  z<=this.size; z++) {
+    for(var x = 0; x<=this.size; x++) {
+        for(var y = 0; y<=this.size; y++ ) {
+            for(var z = 0;  z<=this.size; z++) {
                 this.cells[x][y][z].neighbors = this.getNeighbors(x, y, z);
             }
         }
@@ -93,12 +81,12 @@ CELLLIST.Cube.prototype.getNeighbors = function (x,y,z) {
 
     var neighbors = new Array();
     
-    xStart = x > 0 ? x -1 : x;
-    xEnd = x < this.cells.length-1 ? x+1 : x;
-    yStart = y > 0 ? y -1 : y;
-    yEnd = y < this.cells.length-1 ? y+1 : y;
-    zStart = z > 0 ? z -1 : z;
-    zEnd = z < this.cells.length-1 ? z+1 : z;
+    var xStart = x > 0 ? x -1 : x;
+    var xEnd = x < this.cells.length-1 ? x+1 : x;
+    var yStart = y > 0 ? y -1 : y;
+    var yEnd = y < this.cells.length-1 ? y+1 : y;
+    var zStart = z > 0 ? z -1 : z;
+    var zEnd = z < this.cells.length-1 ? z+1 : z;
     
     for(x = xStart; x <= xEnd; x++) {
         for(y = yStart; y <= yEnd; y++) {
