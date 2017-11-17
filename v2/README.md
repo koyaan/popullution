@@ -16,3 +16,7 @@ trying out native chrome module
 </script>
 </html>
 ```
+
+
+getting sidetracked by [ES6 intro](https://codelabs.developers.google.com/codelabs/chrome-es2015/index.html?index=..%2F..%2Findex#1)
+oooh shiny [material design lite](https://getmdl.io/)

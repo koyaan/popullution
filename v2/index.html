@@ -4,14 +4,43 @@
     <meta charset=utf-8>
     <title>My first three.js app</title>
     <style>
-        body { margin: 0; }
-        canvas { width: 100%; height: 100% }
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%
+        }
     </style>
 </head>
 <body>
 <script type=module>
     import * as THREE from './node_modules/three/build/three.module.js';
+
     const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth /
+        window.innerHeight, 0.1, 1000);
+
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    const gcGeometry = new THREE.BoxGeometry(1, 1, 1);
+    const gcMaterial = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+    const gcCube = new THREE.Mesh( gcGeometry, gcMaterial );
+    scene.add( gcCube );
+    camera.position.z = 5;
+
+    function animate() {
+        requestAnimationFrame( animate )
+        renderer.render( scene, camera);
+
+        gcCube.rotation.x += 0.1;
+        gcCube.rotation.y += 0.1;
+    }
+    animate();
 </script>
 </body>
 </html>
