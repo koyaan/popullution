@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <title>popullution alpha 0.01</title>
+        <script type="text/javascript" src="include/jquery-1.7.1.min.js"></script>
+        <script type="text/javascript" src="include/Three.js"></script>
+        <script type="text/javascript" src="include/Stats.js"></script>
+        <script type="text/javascript" src="include/dat.gui.js"></script>
+        <style type="text/css">
+            #container { 
+                background-color: #000;
+                position: absolute;
+                top: 0px;
+                left: 0px;
+                z-index: 0;
+                width: 100%;
+                height: 100%;
+            }
+            
+            #statsContainer {
+                position: absolute;
+                top: 0px;
+                left: 0px;
+                z-index:1;
+            }
+            
+            #census, #message, #stats {
+                position: absolute;
+                font-size: 40px;
+                top: 0px;
+                left: 150px;
+                font-family: Helvetica;
+                z-index: 1;
+                color: #fff;
+            }
+            #census:before  {
+                content: "#";
+                font-size: 14px;
+            }
+            #message    {
+                left: 300px;
+            }
+            
+            #stats {
+                left: 460px;
+            }
+            
+            body {
+                overflow: hidden;
+            }
+            
+        </style>
+    </head>
+    <body>
+        <div id="statsContainer"></div>
+        <div id="container"></div>
+        <div id="census"></div>
+        <div id="message"></div>
+        <div id="stats"></div>
+        <script src="CellList.js"></script>
+        <script src="kcolors.js"></script>
+        <script src="addEventListeners.js"></script>
+        <script src="Settings.js"></script>
+        <script src="popullution.js"></script>
+    </body>
+</html>
