@@ -1,0 +1,13 @@
+{
+  "name": "popullution",
+  "version": "2.0.0",
+  "description": "WebGL particle experiment",
+  "main": "index.html",
+  "repository": "https://github.com/koyaan/popullution",
+  "author": "Armin Weihbold",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "three": "^0.88.0"
+  }
+}
