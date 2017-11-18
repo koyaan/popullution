@@ -19,28 +19,35 @@
 <script type=module>
     import * as THREE from './node_modules/three/build/three.module.js';
 
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth /
-        window.innerHeight, 0.1, 1000);
+    class PopullutionApp {
+        constructor() {
+            this.scene = new THREE.Scene();
+            this.camera = new THREE.PerspectiveCamera(75, window.innerWidth /
+                window.innerHeight, 0.1, 1000);
 
-    const renderer = new THREE.WebGLRenderer();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
+            this.renderer = new THREE.WebGLRenderer();
+            this.renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(this.renderer.domElement);
 
-    const gcGeometry = new THREE.BoxGeometry(1, 1, 1);
-    const gcMaterial = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-    const gcCube = new THREE.Mesh( gcGeometry, gcMaterial );
-    scene.add( gcCube );
-    camera.position.z = 5;
+            const gcGeometry = new THREE.BoxGeometry(1, 1, 1);
+            const gcMaterial = new THREE.MeshBasicMaterial({color: 0x00ff00});
+            this.gcCube = new THREE.Mesh(gcGeometry, gcMaterial);
+            this.scene.add(this.gcCube);
+            this.camera.position.z = 20;
+        }
 
-    function animate() {
-        requestAnimationFrame( animate )
-        renderer.render( scene, camera);
-
-        gcCube.rotation.x += Math.random()/50;
-        gcCube.rotation.y += Math.random()/100;
+        animate() {
+            this.renderer.render(this.scene, this.camera);
+            this.gcCube.rotation.x += Math.random() * Math.pow(10, -2);
+            this.gcCube.rotation.y += Math.random() * Math.pow(10, -1);
+        }
     }
-    animate();
+    const P = new PopullutionApp();
+    function go() {
+        P.animate();
+        requestAnimationFrame(go)
+    }
+    go();
 </script>
 </body>
 </html>

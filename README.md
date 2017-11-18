@@ -7,6 +7,8 @@ yarn add three
 
 trying out native chrome module
 
+following [three.js introduction](https://threejs.org/docs/#manual/introduction)
+
 ```html
 <!doctype html> 
 <html>
