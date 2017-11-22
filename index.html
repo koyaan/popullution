@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset=utf-8>
-    <title>My first three.js app</title>
+    <title>Wobbly cubes</title>
     <style>
         body {
             margin: 0; overflow: hidden;
@@ -28,23 +28,55 @@
             this.renderer.setSize(window.innerWidth, window.innerHeight);
             document.body.appendChild(this.renderer.domElement);
 
-            const gcGeometry = new THREE.BoxGeometry(1, 1, 1);
-            const gcMaterial = new THREE.MeshBasicMaterial({color: 0xC0C0C0});
-            this.gcCube = new THREE.Mesh(gcGeometry, gcMaterial);
-            this.scene.add(this.gcCube);
-            this.camera.position.z = 20;
+            this.children = [];
+            for(let i=1; i<6; i++)  {
+               let dim = (i/6);
+               let cube = new pCube([dim, dim, dim]);
+               this.children = [...this.children,  cube];
+               this.scene.add(cube.mesh);
+            }
+            this.camera.position.z = 5;
         }
 
         animate() {
+            this.children.forEach( e => e.animate());
             this.renderer.render(this.scene, this.camera);
-            this.gcCube.rotation.x += Math.random() * Math.pow(10, -2);
-            this.gcCube.rotation.y += Math.random() * Math.pow(10, -1);
-            this.gcCube.position.x += (Math.random() - 0.5)*0.01;
-            this.gcCube.position.y += (Math.random() - 0.5)*0.01;
         }
     }
+
+    class pCube {
+      /*
+      translation and rotation functions should be => arguments to constructor
+      everything should follow a functional style if possible
+      */
+
+      constructor(geo = [1,1,1], col=0xC0C0C0) {
+         const geometry = new THREE.BoxGeometry(...geo);
+         const material = new THREE.MeshBasicMaterial({color: col});
+         this.mesh = new THREE.Mesh(geometry, material);
+      }
+
+      animate() {
+         this.translate();
+         this.rotate();
+      }
+
+      rotate() {
+            this.mesh.rotation.x += (Math.random() - 0.5) * Math.pow(10, -2);
+            this.mesh.rotation.y += (Math.random() - 0.5) * Math.pow(10, -2);
+            this.mesh.rotation.z += (Math.random() - 0.5) * Math.pow(10, -2);
+      }
+
+      translate() {
+            this.mesh.position.x += (Math.random() - 0.5)*0.01;
+            this.mesh.position.y += (Math.random() - 0.5)*0.01;
+      }
+
+    }
+
     const P = new PopullutionApp();
-    function go() {
+    window.P = P;
+    const go = () => {
         P.animate();
         requestAnimationFrame(go)
     }
